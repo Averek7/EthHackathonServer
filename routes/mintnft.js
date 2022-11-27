@@ -57,9 +57,11 @@ router.post(
                   token_id,
                   status: "open",
                 })
-                .then(() => {
+                .then(async () => {
+                  const allNFT = await nftwallet.find({ wallet_address });
                   return res.status(200).json({
                     message: `Successfully Imported NFT with ${imp.name} & ${contract_address}`,
+                    nfts: allNFT,
                   });
                 });
             })
@@ -82,8 +84,13 @@ router.post(
 router.post("/:wallet_address/mintnft", async (req, res) => {
   const { title, description, contract_address, token_id, roi, repay } =
     req.body;
+  const wallet_address = req.params.wallet_address;
+  if (!wallet_address)
+    return res.status(400).json({ message: "Wallet Address Not Found" });
+    
   if (!title) return res.status(400).json({ message: "Title not found" });
-  if (!description) return res.status(400).json({ message: "Description not found" });
+  if (!description)
+    return res.status(400).json({ message: "Description not found" });
   if (!req.params.wallet_address)
     return res.status(400).json({ message: "wallet_address not found" });
   if (!contract_address)
@@ -100,15 +107,17 @@ router.post("/:wallet_address/mintnft", async (req, res) => {
     await nftwallet.create({
       title,
       description,
-      wallet_address: req.params.wallet_address,
+      wallet_address,
       contract_address,
       token_id,
       roi,
       repay,
       status: "open",
     });
+    const allNFT = await nftwallet.find({ wallet_address });
     return res.json({
       message: `Successfully Minted NFT with ${title} & ${contract_address}`,
+      nft: allNFT,
     });
   } catch (error) {
     console.log(error.message);
