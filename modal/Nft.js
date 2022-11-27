@@ -8,6 +8,7 @@ const NftSchema = new Schema({
   },
   description: {
     type: String,
+    required:true,
   },
   wallet_address: {
     type: String,

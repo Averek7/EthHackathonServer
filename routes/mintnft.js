@@ -83,6 +83,7 @@ router.post("/:wallet_address/mintnft", async (req, res) => {
   const { title, description, contract_address, token_id, roi, repay } =
     req.body;
   if (!title) return res.status(400).json({ message: "Title not found" });
+  if (!description) return res.status(400).json({ message: "Description not found" });
   if (!req.params.wallet_address)
     return res.status(400).json({ message: "wallet_address not found" });
   if (!contract_address)

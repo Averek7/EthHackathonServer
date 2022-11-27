@@ -5,25 +5,46 @@ const router = require("express").Router();
 
 router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
   try {
-    const {contract_address,wallet_address}=req.params;
-    const mynft=await nftwallet.findOne({wallet_address,contract_address});
-    if(!mynft){
+    const { contract_address, wallet_address } = req.params;
+
+    if (!wallet_address)
+      return res.json({ message: "Wallet address Not found" });
+    if (!contract_address)
+      return res.json({ message: "Contract address Not found" });
+
+    const mynft = await nftwallet.findOne({
+      $and: [{ wallet_address }, { contract_address }],
+    });
+
+    if (!mynft) {
       return res.status(400).send({ message: "NFT not found" });
     }
-    if(mynft.status=="lent"){
-      return res.status(400).send({ message: "Cannot Lend NFT which is already lent" });
+
+    const { title, description, token_id,roi,repay, status } = mynft;
+
+    if (status == "lent") {
+      return res
+        .status(400)
+        .send({ message: "Cannot Lend NFT which is already lent" });
     }
 
-    if(mynft.status!="borrowed"){
-      return res.status(400).send({ message: "Cannot Lend NFT which is not in borrow status" });
+    if (status != "borrowed") {
+      return res
+        .status(400)
+        .send({ message: "Cannot Lend NFT which is not in borrow status" });
     }
 
-    await nftwallet.findOneAndUpdate({ wallet_address , contract_address},{status:"lent"});
+    await nftwallet.findOneAndUpdate(
+      {
+        $and: [{ wallet_address }, { contract_address }],
+      },
+      { status: "lent" }
+    );
 
     await lentnft.create({
       title,
       description,
-      lender_address:wallet_address,
+      lender_address: wallet_address,
       contract_address,
       token_id,
       roi,
@@ -31,7 +52,7 @@ router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
     });
 
     return res.json({
-      message: `Successfully Lent NFT with ${title} & ${nft_address}`,
+      message: `Successfully Lent NFT with ${title} & ${contract_address}`,
     });
   } catch (error) {
     console.log(error.message);
@@ -41,19 +62,25 @@ router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
   }
 });
 
-
 router.post("/:contract_address/:wallet_address/repaynft", async (req, res) => {
   try {
-    const {contract_address,wallet_address}=req.params;
-    const mynft=await nftwallet.findOne({wallet_address,contract_address});
-    if(!mynft){
+    const { contract_address, wallet_address } = req.params;
+    const mynft = await nftwallet.findOne({
+      $and: [{ wallet_address }, { contract_address }],
+    });
+    if (!mynft) {
       return res.status(400).send({ message: "NFT not found" });
     }
-    if(mynft.status!="lent"){
-      return res.status(400).send({ message: "Cannot repay NFT which not lent" });
+    if (mynft.status != "lent") {
+      return res
+        .status(400)
+        .send({ message: "Cannot repay NFT which not lent" });
     }
 
-    await nftwallet.findOneAndUpdate({ wallet_address , contract_address},{status:"open"});
+    await nftwallet.findOneAndUpdate(
+      { wallet_address, contract_address },
+      { status: "open" }
+    );
 
     return res.json({
       message: `Successfully repayed NFT with ${title} & ${nft_address}`,
