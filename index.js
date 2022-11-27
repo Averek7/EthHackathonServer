@@ -1,10 +1,12 @@
 const express = require("express");
+require("dotenv").config();
 const router = express.Router();
 const cors = require("cors");
 const connectToMongo = require("./config/db");
 const mintnft = require("./routes/mintnft");
 const getnft = require("./routes/getnft");
-require("dotenv").config();
+const borrownft = require("./routes/borrownft");
+const lendnft= require("./routes/lendnft");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -18,6 +20,8 @@ connectToMongo();
 
 app.use("/api", mintnft);
 app.use("/api", getnft);
+app.use("/api", borrownft);
+app.use("/api", lendnft);
 
 app.listen(PORT, () => {
   console.log(`Server Running... ${PORT}`);

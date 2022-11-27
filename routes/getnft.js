@@ -3,7 +3,7 @@ const router = require("express").Router();
 
 router.get("/:wallet_address/getnft", async (req, res) => {
   try {
-    const nft = await nftwallet.findOne(req.body.wallet_address);
+    const nft = await nftwallet.find(req.body.wallet_address);
     if (!nft) {
       return res.status(404).send({ message: "No wallet address found" });
     }

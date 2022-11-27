@@ -1,26 +1,24 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const NftSchema = new Schema({
+const BorrowSchema = new Schema({
   title: {
     type: String,
-    required:true,
   },
   description: {
     type: String,
   },
-  wallet_address: {
+  borrower_address: {
     type: String,
-    required:true,
+    unique: true,
   },
   contract_address: {
     type: String,
     unique: true,
-    required:true,
   },
   token_id: {
     type: String,
-    required:true
+    unique: true,
   },
   roi: {
     type: Number,
@@ -28,15 +26,7 @@ const NftSchema = new Schema({
   repay: {
     type: Number,
   },
-  status:{
-    type:String,
-    enum:["open","borrowed","lent"],
-    required:true,
-  },
-  image:{
-    type:String
-  }
 });
 
-const nftwallet = mongoose.model("nftwallet", NftSchema);
-module.exports = nftwallet;
+const borrowedNft = mongoose.model("Borrow", BorrowSchema);
+module.exports = borrowedNft;
