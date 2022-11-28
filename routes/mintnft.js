@@ -82,7 +82,7 @@ router.post(
 );
 
 router.post("/:wallet_address/mintnft", async (req, res) => {
-  const { title, description, contract_address, token_id, ipfs } = req.body;
+  const { title, description, contract_address, token_id, image } = req.body;
   const wallet_address = req.params.wallet_address;
   if (!wallet_address)
     return res.status(400).json({ message: "Wallet Address Not Found" });
@@ -91,9 +91,9 @@ router.post("/:wallet_address/mintnft", async (req, res) => {
   if (!description)
     return res.status(400).json({ message: "Description not found" });
   if (!contract_address)
-    return res.status(400).json({ message: "contract_address not found" });
-  if (!token_id) return res.status(400).json({ message: "token_id not found" });
-  if (!ipfs) return res.status(400).json({ message: "IPFS not found" });
+    return res.status(400).json({ message: "Contract Address not found" });
+  if (!token_id) return res.status(400).json({ message: "Token Id not found" });
+  if (!image) return res.status(400).json({ message: "Image link not found" });
 
   try {
     const nft = await nftwallet.findOne({
@@ -109,7 +109,7 @@ router.post("/:wallet_address/mintnft", async (req, res) => {
       contract_address,
       token_id,
       status: "open",
-      ipfs,
+      image,
     });
     const allNFT = await nftwallet.find({ wallet_address });
     return res.json({

@@ -31,15 +31,12 @@ const NftSchema = new Schema({
   },
   status:{
     type:String,
-    enum:["open","borrowed","lent"],
+    enum:["open","borrowed","lent","claimed"],
     required:true,
   },
   image:{
     type:String
   },
-  ipfs:{
-    type:String,
-  }
 });
 
 const nftwallet = mongoose.model("nftwallet", NftSchema);

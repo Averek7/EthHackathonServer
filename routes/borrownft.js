@@ -25,7 +25,7 @@ router.post(
         return res.status(400).send({ message: "NFT not found" });
       }
 
-      const { title, description, token_id, status, ipfs } = mynft;
+      const { title, description, token_id, status, image } = mynft;
 
       if (status != "open") {
         return res.status(400).send({
@@ -48,7 +48,7 @@ router.post(
         token_id,
         roi,
         repay,
-        ipfs,
+        image,
       });
 
       const allNFT = await nftwallet.find({ wallet_address });
