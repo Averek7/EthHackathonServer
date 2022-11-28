@@ -20,7 +20,7 @@ router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
       return res.status(400).send({ message: "NFT not found" });
     }
 
-    const { title, description, token_id,roi,repay, status } = mynft;
+    const { title, description, token_id,roi,repay, status,ipfs } = mynft;
 
     if (status == "lent") {
       return res
@@ -48,7 +48,7 @@ router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
       contract_address,
       token_id,
       roi,
-      repay,
+      repay,ipfs
     });
 
     return res.json({
@@ -78,7 +78,9 @@ router.post("/:contract_address/:wallet_address/repaynft", async (req, res) => {
     }
 
     await nftwallet.findOneAndUpdate(
-      { wallet_address, contract_address },
+      {
+        $and: [{ wallet_address }, { contract_address }],
+      },
       { status: "open" }
     );
 

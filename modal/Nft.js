@@ -36,6 +36,9 @@ const NftSchema = new Schema({
   },
   image:{
     type:String
+  },
+  ipfs:{
+    type:String,
   }
 });
 

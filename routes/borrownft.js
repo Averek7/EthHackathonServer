@@ -11,24 +11,21 @@ router.post(
     if (!repay)
       return res.status(400).json({ message: "Repay amount not found" });
     try {
-      const wallet_address = req.params.wallet_address;
-      const contract_address = req.params.contract_address;
+      const { wallet_address, contract_address } = req.params;
       if (!wallet_address)
         return res.json({ message: "Wallet address Not found" });
       if (!contract_address)
         return res.json({ message: "Contract address Not found" });
 
-      const mynft = await nftwallet.findOne(
-        {
-          $and: [{ wallet_address }, { contract_address }],
-        }
-      );
+      const mynft = await nftwallet.findOne({
+        $and: [{ wallet_address }, { contract_address }],
+      });
 
       if (!mynft) {
         return res.status(400).send({ message: "NFT not found" });
       }
 
-      const { title, description, token_id, status } = mynft;
+      const { title, description, token_id, status,ipfs } = mynft;
 
       if (status != "open") {
         return res.status(400).send({
@@ -40,7 +37,7 @@ router.post(
         {
           $and: [{ wallet_address }, { contract_address }],
         },
-        { status: "borrowed",roi,repay }
+        { status: "borrowed", roi, repay }
       );
 
       await borrowedNft.create({
@@ -51,10 +48,14 @@ router.post(
         token_id,
         roi,
         repay,
+        ipfs
       });
+
+      const allNFT = await nftwallet.find({ wallet_address });
 
       return res.json({
         message: `Successfully Borrowed NFT with ${title} & ${contract_address}`,
+        nft:allNFT
       });
     } catch (error) {
       console.log(error.message);
