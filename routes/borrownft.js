@@ -78,7 +78,7 @@ router.get("/:wallet_address/borrownft", async (req, res) => {
 
     return res
       .status(200)
-      .send({ message: "Successfully Fetched Borrowed NFTs", nft:allNFT });
+      .send({ message: "Successfully Fetched Borrowed NFTs", nft:allNFTS });
   } catch (error) {
     console.log(error.message);
     return res
