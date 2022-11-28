@@ -25,7 +25,7 @@ router.post(
         return res.status(400).send({ message: "NFT not found" });
       }
 
-      const { title, description, token_id, status,ipfs } = mynft;
+      const { title, description, token_id, status, ipfs } = mynft;
 
       if (status != "open") {
         return res.status(400).send({
@@ -48,14 +48,14 @@ router.post(
         token_id,
         roi,
         repay,
-        ipfs
+        ipfs,
       });
 
       const allNFT = await nftwallet.find({ wallet_address });
 
       return res.json({
         message: `Successfully Borrowed NFT with ${title} & ${contract_address}`,
-        nft:allNFT
+        nft: allNFT,
       });
     } catch (error) {
       console.log(error.message);
@@ -66,26 +66,25 @@ router.post(
   }
 );
 
-// router.get("/:wallet_address/borrownft", async (req, res) => {
-//   try {
-//     const wallet_address = req.params.wallet_address;
-//     const contract_address = req.params.contract_address;
-//     if (!wallet_address)
-//       return res.json({ message: "Wallet address Not found" });
-//     if (!contract_address)
-//       return res.json({ message: "Contract address Not found" });
+router.get("/:wallet_address/borrownft", async (req, res) => {
+  try {
+    const wallet_address = req.params.wallet_address;
+    if (!wallet_address)
+      return res.json({ message: "Wallet address Not found" });
 
-//     const mynft = await nftwallet.find({
-//       wallet_address,
-//     });
+    const allNFTS = await nftwallet.findOne({
+      $and: [{ wallet_address }, { status: "borrowed" }],
+    });
 
-//     return res.status(200).send({ message: "Successfully Fetched Borrowed NFTs", mynft });
-//   } catch (error) {
-//     console.log(error.message);
-//     return res
-//       .status(500)
-//       .json({ status: false, message: "Internal Server Error" });
-//   }
-// });
+    return res
+      .status(200)
+      .send({ message: "Successfully Fetched Borrowed NFTs", nft:allNFT });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ status: false, message: "Internal Server Error" });
+  }
+});
 
 module.exports = router;
