@@ -29,6 +29,9 @@ const NftSchema = new Schema({
   repay: {
     type: Number,
   },
+  amount:{
+    type:Number,
+  },
   status:{
     type:String,
     enum:["open","borrowed","lent","claimed"],

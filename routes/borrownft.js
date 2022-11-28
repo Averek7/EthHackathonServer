@@ -5,12 +5,14 @@ const router = require("express").Router();
 router.post(
   "/:contract_address/:wallet_address/borrownft",
   async (req, res) => {
-    const { roi, repay } = req.body;
-    if (!roi)
-      return res.status(400).json({ message: "Rate of interest not found" });
-    if (!repay)
-      return res.status(400).json({ message: "Repay amount not found" });
     try {
+      const { roi, repay, amount } = req.body;
+      if (!roi)
+        return res.status(400).json({ message: "Rate of interest not found" });
+      if (!repay)
+        return res.status(400).json({ message: "Repayment time not found" });
+      if (!amount)
+        return res.status(400).json({ message: "Repayment amount not found" });
       const { wallet_address, contract_address } = req.params;
       if (!wallet_address)
         return res.json({ message: "Wallet address Not found" });
@@ -37,7 +39,7 @@ router.post(
         {
           $and: [{ wallet_address }, { contract_address }],
         },
-        { status: "borrowed", roi, repay }
+        { status: "borrowed", roi, repay ,amount}
       );
 
       await borrowedNft.create({
@@ -49,6 +51,7 @@ router.post(
         roi,
         repay,
         image,
+        amount
       });
 
       const allNFT = await nftwallet.find({ wallet_address });
@@ -78,7 +81,7 @@ router.get("/:wallet_address/borrownft", async (req, res) => {
 
     return res
       .status(200)
-      .send({ message: "Successfully Fetched Borrowed NFTs", nft:allNFTS });
+      .send({ message: "Successfully Fetched Borrowed NFTs", nft: allNFTS });
   } catch (error) {
     console.log(error.message);
     return res
