@@ -10,6 +10,12 @@ router.post(
     try {
       const { token_id } = req.body;
       const { contract_address, wallet_address } = req.params;
+
+      if (!wallet_address)
+        return res.json({ message: "Wallet address Not found" });
+      if (!contract_address)
+        return res.json({ message: "Contract address Not found" });
+
       var contractABI;
       //Fetch ABI
       fetch(
@@ -32,6 +38,14 @@ router.post(
           );
           const tokenuri = await currentContract.tokenURI(token_id);
           return tokenuri;
+        })
+        .catch((err) => {
+          return res
+            .status(400)
+            .json({
+              status: false,
+              message: "Invalid Contract Address provided",
+            });
         })
         .then(async (resp) => {
           // console.log(await resp);
@@ -67,10 +81,14 @@ router.post(
             })
             .catch((err) => {
               console.log(err);
+              return res
+                .status(400)
+                .json({ status: false, message: err.message });
             });
         })
         .catch((err) => {
           console.log(err);
+          return res.status(400).json({ status: false, message: err.message });
         });
     } catch (error) {
       console.log(error.message);
@@ -83,7 +101,7 @@ router.post(
 
 router.post("/:wallet_address/mintnft", async (req, res) => {
   const { title, description, contract_address, token_id, image } = req.body;
-  const wallet_address = req.params.wallet_address;
+  const { wallet_address } = req.params;
   if (!wallet_address)
     return res.status(400).json({ message: "Wallet Address Not Found" });
 

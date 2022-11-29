@@ -12,6 +12,10 @@ const lenderSchema = new Schema({
     type: String,
     unique: true,
   },
+  borrowers_address: {
+    type: String,
+    unique: true,
+  },
   contract_address: {
     type: String,
     unique: true,
