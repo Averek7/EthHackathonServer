@@ -7,7 +7,7 @@ router.get("/:wallet_address/getnft", async (req, res) => {
     if (!wallet_address)
       return res.status(400).json({ message: "No wallet address found" });
 
-    const nft = await nftwallet.findOne({
+    const nft = await nftwallet.find({
       $and: [{ wallet_address }, { status: "open" }],
     });
 
