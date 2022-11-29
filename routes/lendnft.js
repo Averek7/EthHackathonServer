@@ -6,7 +6,7 @@ const router = require("express").Router();
 router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
   try {
     const { contract_address, wallet_address } = req.params;
-
+    const lender=req.body.lender_address;
     if (!wallet_address)
       return res.json({ message: "Wallet address Not found" });
     if (!contract_address)
@@ -45,7 +45,7 @@ router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
     await lentnft.create({
       title,
       description,
-      lender_address: wallet_address,
+      lender_address: lender,
       borrowers_address: mynft.wallet_address,
       contract_address,
       token_id,
