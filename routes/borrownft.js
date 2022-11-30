@@ -69,13 +69,35 @@ router.post(
   }
 );
 
+router.get("/:wallet_address/getnft", async (req, res) => {
+  try {
+    const { wallet_address } = req.params;
+    if (!wallet_address)
+      return res.status(400).json({ message: "No wallet address found" });
+
+    const nft = await nftwallet.find({
+      $and: [{ wallet_address }, { status: "open" }],
+    });
+
+    return res.status(200).send({
+      message: `Successfully Fetched NFTs which can be borrowed with wallet address ${wallet_address}`,
+      nft,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ status: false, message: "Internal Server Error" });
+  }
+});
+
 router.get("/:wallet_address/borrownft", async (req, res) => {
   try {
     const wallet_address = req.params.wallet_address;
     if (!wallet_address)
       return res.json({ message: "Wallet address Not found" });
 
-    const allNFTS = await nftwallet.findOne({
+    const allNFTS = await nftwallet.find({
       $and: [{ wallet_address }, { status: "borrowed" }],
     });
 
@@ -89,5 +111,6 @@ router.get("/:wallet_address/borrownft", async (req, res) => {
       .json({ status: false, message: "Internal Server Error" });
   }
 });
+
 
 module.exports = router;

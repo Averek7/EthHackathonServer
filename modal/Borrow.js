@@ -10,7 +10,6 @@ const BorrowSchema = new Schema({
   },
   borrower_address: {
     type: String,
-    unique: true,
   },
   contract_address: {
     type: String,
@@ -18,7 +17,6 @@ const BorrowSchema = new Schema({
   },
   token_id: {
     type: String,
-    unique: true,
   },
   roi: {
     type: Number,

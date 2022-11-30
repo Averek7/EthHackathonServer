@@ -10,11 +10,9 @@ const lenderSchema = new Schema({
   },
   lender_address: {
     type: String,
-    unique: true,
   },
   borrowers_address: {
     type: String,
-    unique: true,
   },
   contract_address: {
     type: String,
@@ -22,7 +20,6 @@ const lenderSchema = new Schema({
   },
   token_id: {
     type: String,
-    unique: true,
   },
   roi: {
     type: Number,
@@ -30,6 +27,10 @@ const lenderSchema = new Schema({
   repay: {
     type: Number,
   },
+  transaction:{
+    type:String,
+    enum:["progress","completed"]
+  }
 });
 
 const lentnft = mongoose.model("Lend", lenderSchema);

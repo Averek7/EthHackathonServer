@@ -4,7 +4,6 @@ const router = express.Router();
 const cors = require("cors");
 const connectToMongo = require("./config/db");
 const mintnft = require("./routes/mintnft");
-const getnft = require("./routes/getnft");
 const borrownft = require("./routes/borrownft");
 const lendnft= require("./routes/lendnft");
 
@@ -19,7 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 connectToMongo();
 
 app.use("/api", mintnft);
-app.use("/api", getnft);
 app.use("/api", borrownft);
 app.use("/api", lendnft);
 
