@@ -39,7 +39,7 @@ router.post(
         {
           $and: [{ wallet_address }, { contract_address }],
         },
-        { status: "borrowed", roi, repay ,amount}
+        { status: "borrowed", roi, repay, amount }
       );
 
       await borrowedNft.create({
@@ -51,10 +51,12 @@ router.post(
         roi,
         repay,
         image,
-        amount
+        amount,
       });
 
-      const allNFT = await nftwallet.find({ wallet_address });
+      const allNFT = await nftwallet.find({
+        $and: [{ wallet_address }, { status: "open" }],
+      });
 
       return res.json({
         message: `Successfully Borrowed NFT with ${title} & ${contract_address}`,
@@ -111,6 +113,5 @@ router.get("/:wallet_address/borrownft", async (req, res) => {
       .json({ status: false, message: "Internal Server Error" });
   }
 });
-
 
 module.exports = router;
