@@ -99,8 +99,8 @@ router.get("/:wallet_address/borrownft", async (req, res) => {
     if (!wallet_address)
       return res.json({ message: "Wallet address Not found" });
 
-    const allNFTS = await nftwallet.find({
-      $and: [{ wallet_address }, { status: "borrowed" }],
+    const allNFTS = await borrowedNft.find({
+      $and: [{ wallet_address }],
     });
 
     return res
