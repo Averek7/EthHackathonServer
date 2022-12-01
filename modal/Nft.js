@@ -16,7 +16,6 @@ const NftSchema = new Schema({
   },
   contract_address: {
     type: String,
-    unique: true,
     required:true,
   },
   token_id: {

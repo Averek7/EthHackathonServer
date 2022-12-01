@@ -16,7 +16,6 @@ const lenderSchema = new Schema({
   },
   contract_address: {
     type: String,
-    unique: true,
   },
   token_id: {
     type: String,
