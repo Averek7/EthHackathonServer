@@ -46,7 +46,7 @@ router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
       title,
       description,
       lender_address: lender,
-      borrowers_address: mynft.wallet_address,
+      borrower_address: mynft.wallet_address,
       contract_address,
       token_id,
       roi,
