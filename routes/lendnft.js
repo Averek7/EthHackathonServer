@@ -154,20 +154,20 @@ router.get("/:lender_address/mylentnft", async (req, res) => {
   }
 });
 
-router.get("/:borrowers_address/myborrowednft", async (req, res) => {
+router.get("/:borrower_address/myborrowednft", async (req, res) => {
   try {
-    const borrowers_address = req.params.borrowers_address;
-    if (!borrowers_address)
-      return res.json({ message: "Borrowers address Not found" });
+    const borrower_address = req.params.borrower_address;
+    if (!borrower_address)
+      return res.json({ message: "Borrower address Not found" });
 
     const allNFTS = await lentnft.find({
-      $and: [{ borrowers_address }, { transaction:"progress" }],
+      $and: [{ borrower_address }, { transaction:"progress" }],
     });
 
     return res
       .status(200)
       .send({
-        message: `Successfully Fetched NFTs which are borrowed by wallet address ${borrowers_address}`,
+        message: `Successfully Fetched NFTs which are borrowed by wallet address ${borrower_address}`,
         nft: allNFTS,
       });
   } catch (error) {

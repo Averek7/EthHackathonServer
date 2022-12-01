@@ -11,7 +11,7 @@ const lenderSchema = new Schema({
   lender_address: {
     type: String,
   },
-  borrowers_address: {
+  borrower_address: {
     type: String,
   },
   contract_address: {
