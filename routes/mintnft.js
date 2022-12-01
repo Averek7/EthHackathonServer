@@ -36,16 +36,18 @@ router.post(
             contractABI,
             currentWallet
           );
+          const ownerOfNft = await currentContract.ownerOf(token_id);
+          if (ownerOfNft != wallet_address)
+            return res.status(400).json({ err: "Only owners can import nft!" });
+
           const tokenuri = await currentContract.tokenURI(token_id);
           return tokenuri;
         })
         .catch((err) => {
-          return res
-            .status(400)
-            .json({
-              status: false,
-              message: "Invalid Contract Address provided",
-            });
+          return res.status(400).json({
+            status: false,
+            message: "Invalid Contract Address provided",
+          });
         })
         .then(async (resp) => {
           // console.log(await resp);
