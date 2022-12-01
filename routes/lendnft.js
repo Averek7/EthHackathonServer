@@ -53,6 +53,7 @@ router.post("/:contract_address/:wallet_address/lendnft", async (req, res) => {
       repay,
       amount,
       image,
+      transaction:"progress"
     });
 
     return res.json({
