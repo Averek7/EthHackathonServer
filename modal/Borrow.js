@@ -23,6 +23,9 @@ const BorrowSchema = new Schema({
   repay: {
     type: Number,
   },
+  amount:{
+    type:Number,
+  },
 });
 
 const borrowedNft = mongoose.model("Borrow", BorrowSchema);

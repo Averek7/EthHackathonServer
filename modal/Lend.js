@@ -26,10 +26,13 @@ const lenderSchema = new Schema({
   repay: {
     type: Number,
   },
-  transaction:{
-    type:String,
-    enum:["progress","completed"]
-  }
+  transaction: {
+    type: String,
+    enum: ["progress", "completed"],
+  },
+  amount: {
+    type: Number,
+  },
 });
 
 const lentnft = mongoose.model("Lend", lenderSchema);
