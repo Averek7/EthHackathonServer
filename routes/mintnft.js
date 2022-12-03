@@ -17,15 +17,16 @@ router.post(
         return res.json({ message: "Contract address Not found" });
 
       var contractABI;
-      //Fetch ABI
+      // Fetch ABI
+
       fetch(
         `https://api-testnet.polygonscan.com/api?module=contract&action=getabi&address=${contract_address}&apikey=${process.env.API_KEY}`
       )
-        .then(async (res) => {
+        .then(async (resp1) => {
           const provider = ethers.getDefaultProvider(
             `https://polygon-mumbai.g.alchemy.com/v2/${process.env.alchemy}`
           );
-          contractABI = (await res.json()).result;
+          contractABI = (await resp1.json()).result;
           const currentWallet = new ethers.Wallet(
             process.env.private_key,
             provider
@@ -49,9 +50,9 @@ router.post(
             message: "Invalid Contract Address provided",
           });
         })
-        .then(async (resp) => {
+        .then(async (res2) => {
           // console.log(await resp);
-          const importedNFT = await resp;
+          const importedNFT = await res2;
 
           const nft = await nftwallet.findOne({
             $and: [{ contract_address }, { token_id }],
@@ -61,11 +62,11 @@ router.post(
           }
 
           fetch(importedNFT)
-            .then(async (r) => {
-              const imp = await r.json();
+            .then(async (res3) => {
+              const imp = await res3.json();
               await nftwallet
                 .create({
-                  title: imp.name,
+                  title: imp.title,
                   description: imp.description,
                   image: imp.image,
                   wallet_address,
@@ -87,10 +88,6 @@ router.post(
                 .status(400)
                 .json({ status: false, message: err.message });
             });
-        })
-        .catch((err) => {
-          console.log(err);
-          return res.status(400).json({ status: false, message: err.message });
         });
     } catch (error) {
       console.log(error.message);
